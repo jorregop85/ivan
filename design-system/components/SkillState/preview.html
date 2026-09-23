@@ -1,0 +1,20 @@
+<!-- @dsCard group="Estados" height=96 -->
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><title>SkillState</title>
+<style>
+  body { padding: 16px; }
+  .row { display:flex; flex-wrap:wrap; gap:12px; align-items:center; }
+  .stack { display:grid; gap:12px; max-width:420px; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:12px 24px; max-width:460px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var E = window.EquipoVirtual, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
+    h('div',{className:'grid2'},h(E.SkillState,{state:'consolidada'},'Pide ayuda con palabras'),h(E.SkillState,{state:'emergente'},'Usa “me” y “yo”'),h(E.SkillState,{state:'ausente'},'Relata en pasado'),h(E.SkillState,{state:'sin-datos'},'Juego con reglas'))));
+</script>
+</body>
+</html>

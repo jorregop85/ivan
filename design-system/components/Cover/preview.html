@@ -1,0 +1,58 @@
+<!-- @dsCard height=288 -->
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Equipo Virtual</title>
+<style>
+  html, body { margin:0; height:100%; padding:0; }
+  body { background:var(--surface); color:var(--ink); font-family:var(--font-sans); overflow:hidden; }
+  .cover { position:relative; width:960px; height:288px; overflow:hidden; }
+  .art { position:absolute; top:0; left:480px; width:480px; height:288px; overflow:hidden; }
+  .art svg { display:block; }
+  .brand { fill:var(--primary); }
+  .peach { fill:var(--agent-sofia); }
+  [data-theme="dark"] .peach { fill:var(--agent-sofia-ink); }
+  .honey { fill:var(--skill-emergente); }
+  .deep { fill:var(--ink); }
+  .disc { fill:var(--agent-sofia); }
+  [data-theme="dark"] .disc { fill:var(--agent-sofia-ink); }
+  .disc.teal { fill:var(--primary-soft); }
+  .onpeach { fill:var(--primary); }
+  .words { position:absolute; left:var(--space-6); bottom:var(--space-6); max-width:440px; }
+  .name { margin:0; font-size:96px; line-height:.95; font-weight:800; letter-spacing:-.02em; color:var(--ink); }
+  .tag { margin:var(--space-3) 0 0 4px; font-size:14px; line-height:20px; font-weight:600; color:var(--ink-muted); }
+</style>
+</head>
+<body>
+<div class="cover">
+<div class="art" aria-hidden="true">
+<svg viewBox="0 0 480 288" width="480" height="288">
+<!--
+  blocks      primary 144×250 bled off the top (Iván, the brand) · agent-sofia 128×160 (warm tint) · skill-emergente 128×56 pill (honey accent) · ink 176×208 bleeding off the right — ≈40% of 960×288
+  arrangement one tall teal slab with satellites, bottoms aligned space-6 above the edge, space-4 gutters
+  pattern     discs, from "formas blandas… radius-pill en avatares": avatar-sized discs (r = space-2) at a space-6 pitch cut into the ink block, three primary discs rising over the peach
+  scales      sides in space-2 multiples; gutters space-4; pitch space-6; corners radius-lg (22), pill rx = half of 56
+-->
+<rect class="brand" x="24" y="-22" width="144" height="278" rx="22"/>
+<rect class="honey" x="184" y="24" width="128" height="56" rx="28"/>
+<rect class="peach" x="184" y="96" width="128" height="160" rx="22"/>
+<circle class="onpeach" cx="216" cy="224" r="8"/>
+<circle class="onpeach" cx="248" cy="192" r="8"/>
+<circle class="onpeach" cx="280" cy="160" r="8"/>
+<rect class="deep" x="328" y="48" width="176" height="208" rx="22"/>
+<g>
+  <circle class="disc" cx="360" cy="80" r="8"/><circle class="disc" cx="392" cy="80" r="8"/><circle class="disc teal" cx="424" cy="80" r="8"/><circle class="disc" cx="456" cy="80" r="8"/>
+  <circle class="disc" cx="360" cy="112" r="8"/><circle class="disc teal" cx="392" cy="112" r="8"/><circle class="disc" cx="424" cy="112" r="8"/><circle class="disc" cx="456" cy="112" r="8"/>
+  <circle class="disc teal" cx="360" cy="144" r="8"/><circle class="disc" cx="392" cy="144" r="8"/><circle class="disc" cx="424" cy="144" r="8"/><circle class="disc teal" cx="456" cy="144" r="8"/>
+  <circle class="disc" cx="360" cy="176" r="8"/><circle class="disc" cx="392" cy="176" r="8"/><circle class="disc teal" cx="424" cy="176" r="8"/><circle class="disc" cx="456" cy="176" r="8"/>
+</g>
+</svg>
+</div>
+<div class="words">
+  <h1 class="name">Equipo<br>Virtual</h1>
+  <p class="tag">Lo que se trabaja en terapia, llevado a la casa. Todos ven el mismo avance.</p>
+</div>
+</div>
+</body>
+</html>

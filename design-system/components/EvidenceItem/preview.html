@@ -1,0 +1,21 @@
+<!-- @dsCard group="Objetivos" height=260 -->
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><title>EvidenceItem</title>
+<style>
+  body { padding: 16px; }
+  .row { display:flex; flex-wrap:wrap; gap:12px; align-items:center; }
+  .stack { display:grid; gap:12px; max-width:420px; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:12px 24px; max-width:460px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var E = window.EquipoVirtual, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
+    h('ul',{style:{margin:0,padding:0}},h(E.EvidenceItem,{source:'aba',date:'Lun 21 sep',quote:'Hoy pidió ayuda con ‘yo quiero’ en 7 de 10 intentos.',href:'#',kind:'registro'}),
+h(E.EvidenceItem,{source:'casa',date:'Mar 22 sep',quote:'En la tarde dijo ‘no me gusta el ruido’ sin ayuda.',href:'#',kind:'audio'}))));
+</script>
+</body>
+</html>

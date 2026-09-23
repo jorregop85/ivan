@@ -1,0 +1,21 @@
+<!-- @dsCard group="Desafíos" height=220 -->
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><title>ChallengeCard</title>
+<style>
+  body { padding: 16px; }
+  .row { display:flex; flex-wrap:wrap; gap:12px; align-items:center; }
+  .stack { display:grid; gap:12px; max-width:420px; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:12px 24px; max-width:460px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var E = window.EquipoVirtual, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
+    h('div',{className:'stack'},h(E.ChallengeCard,{text:'Cada vez que diga “no le gusta”, devolverle “no me gusta” con calma.',moment:'Todo el día',agent:'clara',goal:'Uso del “me”'}),
+h(E.ChallengeCard,{done:true,text:'En la cena, contar juntos una cosa que pasó ayer con el calendario del refrigerador.',moment:'Cena',agent:'clara',goal:'Relato en pasado'}))));
+</script>
+</body>
+</html>

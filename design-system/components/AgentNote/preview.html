@@ -1,0 +1,21 @@
+<!-- @dsCard group="Equipo" height=300 -->
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><title>AgentNote</title>
+<style>
+  body { padding: 16px; }
+  .row { display:flex; flex-wrap:wrap; gap:12px; align-items:center; }
+  .stack { display:grid; gap:12px; max-width:420px; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:12px 24px; max-width:460px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var E = window.EquipoVirtual, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
+    h('div',{className:'stack'},h(E.AgentNote,{agent:'clara'},h('p',null,'El “me” aparece más cuando está tranquilo. Propongo seguir con la devolución en espejo.')),
+h(E.AgentNote,{agent:'ivan',synthesis:true,role:'Síntesis de la semana'},h('p',null,'Buena semana en lenguaje. La participación grupal sigue estancada: lo llevamos como pregunta al equipo real.')))));
+</script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!-- @dsCard group="Objetivos" height=340 -->
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><title>GoalCard</title>
+<style>
+  body { padding: 16px; }
+  .row { display:flex; flex-wrap:wrap; gap:12px; align-items:center; }
+  .stack { display:grid; gap:12px; max-width:420px; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:12px 24px; max-width:460px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+  var E = window.EquipoVirtual, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('root')).render(h(React.Fragment, null,
+    h('div',{className:'stack'},h(E.GoalCard,{agent:'clara',status:'avanzando',title:'Uso del “me” y el “yo” al hablar de sí mismo',metric:'6 de 10 esta semana',data:[3,4,4,5,6],baseline:3,goal:8,max:10}),
+h(E.GoalCard,{agent:'olivia',status:'midiendo',title:'Entender sus momentos de desconexión',data:[4,2,5,3],max:8}))));
+</script>
+</body>
+</html>
