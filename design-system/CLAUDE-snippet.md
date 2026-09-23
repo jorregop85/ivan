@@ -8,3 +8,4 @@ La UI de este proyecto sigue el sistema "Equipo Virtual", que está en `design-s
 - Componentes de referencia: `design-system/components/<Nombre>/README.md` (guía de uso) y `preview.html` (ejemplo). Tipos en `components/index.d.ts`, implementación en `components/bundle.js` y estilos en `components/bundle.css`. Si el proyecto usa React, reescríbelos como componentes propios que respeten las mismas clases y tokens.
 - Fuente: Nunito (Google Fonts), pesos 500–800.
 - Reglas no negociables: agentes siempre con la etiqueta "IA"; estados siempre con ícono + palabra, nunca solo color; toda afirmación enlaza a su fuente; objetivos táctiles de mínimo 48px.
+- Pantallas de referencia y reglas del equipo (coordinador, especialistas IA con respaldo humano, validación humana, medición de brecha): `design-system/pantallas/README.md`.

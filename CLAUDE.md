@@ -23,6 +23,22 @@ El sistema integra información de padres, terapeutas ABA, psiquiatra y colegio;
 7. **Cuidar a la familia.** Las prácticas se integran en rutinas normales (comida, auto, sus videos). Si la familia muestra agotamiento, se reduce la carga en vez de aumentarla.
 8. **Evidencia honesta.** Distinguir entre estrategias con buen respaldo y enfoques con respaldo limitado, y decirlo.
 9. **Lenguaje.** Español neutro, simple, cálido, sin jerga clínica ni tono de examen. Nunca usar voseo.
+10. **Respaldo humano cuando existe; si no, la IA asume el rol completo.** Si en el equipo real hay un profesional de la disciplina, él valida los objetivos y cambios de rumbo de esa especialista IA. Si no existe (por disponibilidad o por recursos), la IA asume el rol completo: propone, mide y ajusta; los padres aprueban y el dashboard indica "IA a cargo, sin respaldo profesional". Es mejor seguimiento de la IA que ningún seguimiento. Los principios 1, 2 y 3, los límites de cada agente y la revisión de Vera aplican siempre, haya o no respaldo.
+11. **Medir para cambiar el rumbo.** Cada objetivo se mide día a día contra su meta. Si la brecha no se cierra al ritmo esperado, la especialista propone un ajuste concreto (qué cambiar, por qué, efecto esperado y fecha de revisión) en vez de seguir igual.
+
+### Respaldo humano por agente
+
+| Agente IA | Respaldo humano, si existe | Sin respaldo: la IA asume el rol completo, con este límite |
+| :--- | :--- | :--- |
+| Iván | Profesional a cargo del caso | Los padres aprueban lo que se publica (ya es así) |
+| Clara | Fonoaudióloga | Marca las estrategias con respaldo limitado y sugiere evaluación profesional cuando corresponda |
+| Andrea | Supervisora ABA | Mismo límite que Clara |
+| Olivia | Terapeuta ocupacional | Mismo límite que Clara |
+| Sofía | Psicóloga | Mismo límite que Clara; las alertas de acoso o ánimo bajo siempre recomiendan un profesional |
+| Elena | Psiquiatra | Nunca asume funciones médicas: no diagnostica ni opina de medicación. Solo observa más y prepara preguntas para el próximo control |
+| Vera | Padres (aprobación final) | — |
+
+Quién respalda a quién se configura en `participantes.respalda_a`: un mismo profesional puede respaldar a más de un agente, y un agente sin nadie asignado trabaja en rol completo. Las alertas `consultar` o `urgente` recomiendan acudir a un profesional aunque no exista en el equipo.
 
 ---
 
@@ -37,20 +53,28 @@ El sistema integra información de padres, terapeutas ABA, psiquiatra y colegio;
 
 ### Flujo semanal
 ```
-Audios / registros / documentos
+Audios / registros / documentos / informes de cada disciplina
+(terapeutas, colegio, psiquiatra)
         │
         ▼
 Transcripción + normalización (glosario ABA)
         │
         ▼
 Especialistas (Clara, Andrea, Olivia, Sofía, Elena)
-  → evidencia, hipótesis, estado de objetivos,
-    preguntas propuestas, microprácticas, alertas
+  → evidencia, hipótesis, estado y brecha de objetivos,
+    ajustes propuestos, preguntas propuestas,
+    microprácticas, alertas
+        │
+        ▼
+Respaldo humano de cada especialista, si existe
+  → valida objetivos y ajustes (si no existe: pasa directo)
         │
         ▼
 Iván (coordinador)
-  → filtra preguntas, resuelve contradicciones,
-    integra, prepara actualización del dashboard
+  → recibe también los informes completos,
+    filtra preguntas, resuelve contradicciones,
+    prioriza ajustes y desafíos, integra,
+    prepara actualización del dashboard
         │
         ▼
 Vera (seguridad) → aprueba o bloquea
@@ -62,7 +86,7 @@ Revisión humana (padres) → publicación en dashboard
 ### Modos de operación
 1. **Punto de partida (onboarding):** entrevista inicial conducida por Iván con preguntas aportadas por cada especialista. Produce el perfil inicial y la propuesta de objetivos.
 2. **Ciclo semanal:** el flujo de arriba.
-3. **Ciclo diario liviano:** extracción de cada audio o registro al llegar; alertas inmediatas si Vera detecta algo urgente. Sin análisis completo.
+3. **Ciclo diario liviano:** extracción de cada audio o registro al llegar; actualización de las mediciones de cada objetivo (cálculo, sin agente); alertas inmediatas si Vera detecta algo urgente. Sin análisis completo.
 4. **Bajo demanda:** informe detallado, consulta puntual de los padres (Iván deriva a la especialista que corresponda y responde integrando).
 5. **Reevaluación (cada 6 a 8 semanas):** versión corta de la entrevista; actualiza estados de habilidades (ausente → emergente → consolidada) y propone ajustar objetivos.
 
@@ -74,11 +98,12 @@ Todo cuelga de `nino_id`, aunque por ahora exista uno solo.
 
 | Tabla | Contenido |
 | :--- | :--- |
-| `participantes` | nombre, rol (padre, madre, terapeuta_aba, supervisora_aba, psiquiatra, colegio), canal, consentimiento |
+| `participantes` | nombre, rol (padre, madre, terapeuta_aba, supervisora_aba, fonoaudiologa, terapeuta_ocupacional, psicologa, psiquiatra, colegio), canal, consentimiento, `respalda_a` (agentes IA que valida; vacío si no respalda a ninguno) |
 | `perfil` | versión del perfil de punto de partida: habilidades por área con estado (consolidada / emergente / ausente / sin datos), fortalezas, barreras, prioridades de la familia |
-| `objetivos` | área, agente dueño, definición, método de medición, línea base, meta, estado, propuesto_por, validado_por, fechas |
+| `objetivos` | área, agente dueño, agentes colaboradores, definición, método de medición (qué se cuenta cada día), línea base, meta, fecha_meta, estado, propuesto_por, validado_por (respaldo humano o "padres" si la IA está en rol completo), fechas |
+| `ajustes` | objetivo_id, agente, descripción, motivo (dónde está la brecha), efecto esperado, fecha de revisión, estado (propuesto / aprobado / activo / mantenido / descartado), aprobado_por, resultado |
 | `entradas` | fuente, tipo (audio, texto, formulario, documento), archivo original, transcripción, fecha, participante |
-| `observaciones` | extraídas de entradas: objetivo_id, cita literal, interpretación, contexto (regulado/cansado, casa/terapia/colegio, pregunta directa/conversación libre) |
+| `observaciones` | extraídas de entradas: objetivo_id, cita literal, interpretación, resultado (acierto / no acierto, cuando el objetivo se mide por conteo), contexto (regulado/cansado, casa/terapia/colegio, pregunta directa/conversación libre) |
 | `hipotesis` | agente, enunciado, estado (activa / confirmada / descartada), evidencia a favor y en contra |
 | `preguntas` | agente que la propone, destinatario, texto, tipo, hipótesis vinculada, valor, estado (en cola / enviada / respondida / descartada), respuesta |
 | `micropracticas` | objetivo_id, descripción, momento del día, semana, realizada (sí/no), respuesta del niño |
@@ -88,7 +113,18 @@ Todo cuelga de `nino_id`, aunque por ahora exista uno solo.
 | `alertas` | nivel, descripción, fuente, estado, acción tomada |
 | `conocimiento` | base de conocimiento curada por área, con nivel de evidencia |
 
-RLS: padres ven y editan todo; terapeutas proponen/validan objetivos y agregan observaciones; psiquiatra solo lectura de tendencias; colegio solo estrategias y su propia entrada.
+RLS: padres ven y editan todo; terapeutas proponen/validan objetivos y ajustes de los agentes que respaldan y agregan observaciones; psiquiatra solo lectura de tendencias; colegio solo estrategias y su propia entrada.
+
+### Seguimiento diario de objetivos (cálculos, sin agente)
+
+Se calculan a partir de las `observaciones` vinculadas a cada objetivo (aciertos, intentos y contexto):
+
+- **Hoy:** promedio móvil de los últimos 7 días.
+- **Brecha:** meta − hoy. **Avance:** (hoy − línea base) / (meta − línea base).
+- **Ritmo y pronóstico:** pendiente semanal; fecha estimada de llegada vs. `fecha_meta`. **Ruta a la meta:** recta de la línea base a la meta en `fecha_meta`.
+- **Dónde está la brecha:** el mismo cálculo separado por contexto (regulado/cansado, pregunta directa/conversación libre, casa/terapia/colegio).
+- **Disparador de cambio de rumbo:** si el promedio queda bajo la ruta a la meta 2 semanas seguidas, o si un contexto concentra la brecha, la especialista debe proponer un ajuste en su nota semanal.
+- Objetivos en medición (primeras 2 a 3 semanas): solo "hoy"; sin meta, brecha ni pronóstico.
 
 ---
 
@@ -129,7 +165,14 @@ Cada especialista mantiene **hipótesis activas** y pregunta para confirmarlas o
   ],
   "estado_objetivos": [
     {"objetivo_id": "", "estado": "avanzando|estancado|retrocediendo|en_medicion|sin_datos",
-     "justificacion": ""}
+     "donde_esta_la_brecha": "", "justificacion": ""}
+  ],
+  "ajustes_propuestos": [
+    {"objetivo_id": "", "descripcion": "", "motivo": "", "efecto_esperado": "",
+     "fecha_revision": "", "evidencia": "solida|limitada"}
+  ],
+  "resultado_ajustes_anteriores": [
+    {"ajuste_id": "", "resultado": "", "recomendacion": "mantener|descartar|extender"}
   ],
   "preguntas_propuestas": [
     {"para": "padres|terapeuta_aba|psiquiatra|colegio", "texto": "",
@@ -147,7 +190,7 @@ Cada especialista mantiene **hipótesis activas** y pregunta para confirmarlas o
 ```
 
 `valor` va de 1 a 5: cuánto ayuda la respuesta a resolver una hipótesis importante.
-Límites por especialista y semana: máximo 3 preguntas propuestas, máximo 2 microprácticas.
+Límites por especialista y semana: máximo 3 preguntas propuestas, máximo 2 microprácticas, máximo 1 ajuste por objetivo. No se propone un nuevo ajuste antes de la fecha de revisión del anterior, salvo alerta.
 
 ---
 
@@ -157,7 +200,7 @@ Límites por especialista y semana: máximo 3 preguntas propuestas, máximo 2 mi
 
 **Rol.** Dirige el equipo virtual. Es el único que habla con la familia y con los profesionales, el único que escribe en el dashboard y el que conduce la entrevista de punto de partida.
 
-**Entradas.** Notas semanales de todas las especialistas, perfil, objetivos, cola de preguntas, respuestas recibidas, registro diario, alertas.
+**Entradas.** Notas semanales de todas las especialistas, informes completos de cada disciplina (terapeutas, colegio, psiquiatra), perfil, objetivos, seguimiento diario de objetivos, ajustes propuestos y su estado de validación, cola de preguntas, respuestas recibidas, registro diario, alertas.
 
 **Responsabilidades.**
 1. **Filtrar preguntas.** De la cola, elegir como máximo 3 por destinatario por semana (padres) y 1 a 2 por profesional. Criterio: mayor valor, prioridad a seguridad y a objetivos activos, sin duplicados. Reformular en lenguaje simple.
@@ -169,6 +212,7 @@ Límites por especialista y semana: máximo 3 preguntas propuestas, máximo 2 mi
 7. **Informes bajo demanda.** Detallados, organizados por objetivo, con cada afirmación enlazada a su fuente.
 8. **Escalar.** Toda alerta `consultar` o `urgente` se comunica de inmediato a los padres con una recomendación clara.
 9. **Cuidar la adherencia.** Si en dos semanas seguidas no se realizan los desafíos, preguntar qué lo dificulta antes de proponer más.
+10. **Gestionar los cambios de rumbo.** Presentar a la familia los ajustes que proponen las especialistas, siempre indicando su autora ("Clara propone…"), porque Iván sigue siendo el único que habla con la familia. Si el agente tiene respaldo humano, el ajuste pasa a activo solo cuando ese profesional lo valida; mientras tanto se muestra como "propuesto". Si no tiene respaldo, lo aprueban los padres. Si dos ajustes de distintas áreas chocan (mismo momento del día, demasiada carga), priorizar o convertirlo en pregunta para el equipo real. Informar el resultado de cada ajuste en su fecha de revisión.
 
 **Entrevista de punto de partida (onboarding).**
 - Etapa 1, contexto: edad, diagnóstico, terapias actuales, colegio, equipo, qué preocupa más hoy, qué quieren ver distinto en seis meses.
@@ -189,7 +233,8 @@ Límites por especialista y semana: máximo 3 preguntas propuestas, máximo 2 mi
     "objetivos": [],
     "desafios_semana": [],
     "guia_nuevas_entradas": [],
-    "evidencia_destacada": []
+    "evidencia_destacada": [],
+    "ajustes": [{"ajuste_id": "", "estado": "propuesto|aprobado|activo", "aprobado_por": "", "con_respaldo_humano": true}]
   },
   "resumenes_por_rol": {"padres": "", "terapeutas": "", "psiquiatra": "", "colegio": ""},
   "escalamientos": []
@@ -213,7 +258,7 @@ Límites por especialista y semana: máximo 3 preguntas propuestas, máximo 2 mi
 
 **Estrategias base.** Modelar frases cortas y desarmables desde la perspectiva del niño; devolver la frase correcta sin corregir; ofrecer la respuesta como opción; comentar más y preguntar menos (lenguaje declarativo); hacer visible el tiempo (calendario, "ayer / hoy / mañana"); responder al significado de los guiones.
 
-**Límites.** El marco Gestalt tiene respaldo en investigación limitado; decirlo. ABA puede trabajar pronombres de otra manera: si hay diferencia, escalar a Iván como contradicción. Si no hay fonoaudiólogo real en el equipo, ser más conservadora y sugerir una evaluación profesional.
+**Límites.** El marco Gestalt tiene respaldo en investigación limitado; decirlo. ABA puede trabajar pronombres de otra manera: si hay diferencia, escalar a Iván como contradicción. Si no hay fonoaudiólogo real en el equipo, asume el rol completo según el principio 10.
 
 ---
 
@@ -236,7 +281,7 @@ Límites por especialista y semana: máximo 3 preguntas propuestas, máximo 2 mi
 
 **Glosario (para normalizar transcripciones).** Refuerzo, reforzador, ayuda física / gestual / verbal / modelo, desvanecimiento, ensayo discreto, enseñanza incidental, mando (petición), tacto (nombrar), intraverbal, línea base, generalización, mantención, conducta problema, función (escape, atención, tangible, sensorial).
 
-**Límites.** No reemplaza a la supervisora ABA; los objetivos que propone se validan con ella. Promueve un trabajo que respete el asentimiento del niño.
+**Límites.** Si hay supervisora ABA, no la reemplaza: los objetivos y ajustes que propone se validan con ella. Si no la hay, asume el rol completo según el principio 10. Promueve un trabajo que respete el asentimiento del niño.
 
 ---
 
@@ -328,3 +373,4 @@ Criterio para avanzar de fase: la etapa anterior funciona dos semanas seguidas s
 - Ninguna escritura al dashboard sin aprobación de Vera y revisión de los padres.
 - Datos de ejemplo y pruebas siempre anonimizados (niño ficticio: "Tomás").
 - Registrar costos por ejecución de agente; el ciclo completo corre semanalmente, no por mensaje.
+- **Dashboard:** seguir el sistema de diseño de `design-system/` (leer `design-system/CLAUDE-snippet.md` y `design-system/README.md` antes de tocar la interfaz). Pantallas de referencia y reglas de la interfaz en `design-system/pantallas/README.md`.

@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Registro diario</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/equipovirtual/tokens.css">
+<link rel="stylesheet" href="ds/equipovirtual/components/bundle.css">
+<script src="ds/equipovirtual/components/bundle.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,500;0,600;0,700;0,800;1,500&amp;display=swap">
+<style>
+body{margin:0;background:var(--surface);font-family:"Nunito",system-ui,sans-serif}
+a{color:var(--primary)}a:hover{color:var(--primary-hover)}
+</style>
+</helmet>
+<div style="width: 390px; height: 1480px; box-sizing: border-box; background: var(--surface); color: var(--ink); font-family: var(--font-sans); padding: 16px 16px 120px; display: flex; flex-direction: column; gap: 28px; position: relative;">
+
+  <a href="Main.dc.html" style="display: inline-flex; align-items: center; gap: 6px; min-height: 44px; font-weight: 700; text-decoration: none; color: var(--primary);">‹ Vista general</a>
+
+  <header style="display: flex; flex-direction: column; gap: 4px;">
+    <h1 style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 800;">Registro de hoy</h1>
+    <span style="font-size: 14px; font-weight: 600; color: var(--ink-muted);">Miércoles 23 de septiembre · menos de 2 minutos</span>
+  </header>
+
+  <x-import component-from-global-scope="EquipoVirtual.ScaleInput" label="¿Cómo durmió anoche?" low="Muy mal" high="Muy bien"></x-import>
+  <x-import component-from-global-scope="EquipoVirtual.ScaleInput" label="¿Cómo estuvo de ánimo?" low="Muy bajo" high="Muy bien"></x-import>
+
+  <section style="display: flex; flex-direction: column; gap: 12px;">
+    <h2 style="margin: 0; font-size: 16px; line-height: 24px; font-weight: 700;">Momentos de desconexión</h2>
+    <x-import component-from-global-scope="EquipoVirtual.QuickReplies" label="Cuántos" options="{{desconexion}}" allow-unknown="{{no}}"></x-import>
+    <span style="font-size: 14px; font-weight: 600; color: var(--ink-muted);">¿Volvía al llamarlo?</span>
+    <x-import component-from-global-scope="EquipoVirtual.QuickReplies" label="¿Volvía al llamarlo?" options="{{volvia}}"></x-import>
+  </section>
+
+  <section style="display: flex; flex-direction: column; gap: 12px;">
+    <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+      <h2 style="margin: 0; font-size: 16px; line-height: 24px; font-weight: 700;">Uso del “yo” y el “me”</h2>
+      <x-import component-from-global-scope="EquipoVirtual.AgentAvatar" agent="clara" size="{{n24}}"></x-import>
+    </div>
+    <x-import component-from-global-scope="EquipoVirtual.QuickReplies" label="Resultado" options="{{acierto}}" allow-unknown="{{no}}"></x-import>
+    <span style="font-size: 14px; font-weight: 600; color: var(--ink-muted);">¿Cómo estaba?</span>
+    <x-import component-from-global-scope="EquipoVirtual.QuickReplies" label="Estado" options="{{estado}}" allow-unknown="{{no}}"></x-import>
+    <span style="font-size: 14px; font-weight: 600; color: var(--ink-muted);">¿En qué contexto?</span>
+    <x-import component-from-global-scope="EquipoVirtual.QuickReplies" label="Contexto" options="{{contexto}}" allow-unknown="{{no}}"></x-import>
+  </section>
+
+  <section style="display: flex; flex-direction: column; gap: 12px;">
+    <h2 style="margin: 0; font-size: 16px; line-height: 24px; font-weight: 700;">¿Hubo alguna crisis?</h2>
+    <x-import component-from-global-scope="EquipoVirtual.QuickReplies" label="Crisis" options="{{crisis}}" allow-unknown="{{no}}"></x-import>
+  </section>
+
+  <section style="display: flex; flex-direction: column; gap: 8px;">
+    <label for="positivo" style="font-size: 16px; line-height: 24px; font-weight: 700;">Algo positivo del día</label>
+    <textarea id="positivo" rows="3" placeholder="Por ejemplo: pidió ayuda solo para abrir la mochila" style="font: inherit; font-weight: 500; padding: 12px 14px; border-radius: var(--radius-md); border: 1.5px solid var(--line-strong); background: var(--surface-raised); color: var(--ink); resize: none;"></textarea>
+  </section>
+
+  <div style="position: absolute; left: 0; right: 0; bottom: 0; padding: 16px; display: flex; gap: 8px; background: var(--surface-raised); box-shadow: var(--shadow-sheet); border-radius: 22px 22px 0 0;">
+    <x-import component-from-global-scope="EquipoVirtual.Button" variant="secondary" icon="●">Audio</x-import>
+    <div style="flex-grow: 1; display: flex;">
+      <x-import component-from-global-scope="EquipoVirtual.Button" block="{{yes}}">Enviar registro</x-import>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1480}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      yes: true, no: false, n24: 24,
+      desconexion: ['Ninguno', '1 o 2', '3 o más'],
+      volvia: ['Sí', 'A veces', 'No'],
+      acierto: ['Acertó', 'No acertó', 'No habló de sí'],
+      estado: ['Tranquilo', 'Cansado'],
+      contexto: ['Pregunta directa', 'Conversación libre'],
+      crisis: ['No', 'Sí, leve', 'Sí, fuerte']
+    };
+  }
+}
+</script>
+</body>
+</html>
